@@ -4,9 +4,15 @@ const http = require("http");
 const cors = require("cors");
 
 const app = express();
-app.use(cors());
+const PORT = process.env.PORT || 5000; // Use dynamic port for Render
 
+// Enable CORS for all requests
+app.use(cors({ origin: "*" }));
+
+// Create HTTP server
 const server = http.createServer(app);
+
+// Setup PeerJS Server
 const peerServer = ExpressPeerServer(server, {
   debug: true,
   path: "/myapp",
@@ -14,6 +20,12 @@ const peerServer = ExpressPeerServer(server, {
 
 app.use("/peerjs", peerServer);
 
-server.listen(5000, () => {
-  console.log("PeerJS server running on port 5000");
+// Basic Route to Test if Backend is Working
+app.get("/", (req, res) => {
+  res.send("PeerJS server is running...");
+});
+
+// Start the Server
+server.listen(PORT, () => {
+  console.log(`PeerJS server running on port ${PORT}`);
 });
